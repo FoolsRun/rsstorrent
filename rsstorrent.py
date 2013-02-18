@@ -29,7 +29,7 @@ FEEDS = [
 
         ]
 
-TIMESTAMP    = "/root/rsstorrent.stamp"
+TIMESTAMP    = "~/rsstorrent.stamp"
 VERBOSE      = True
 
 import feedparser
