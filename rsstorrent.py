@@ -1,4 +1,4 @@
-!/usr/bin/python
+#!/usr/bin/python
 #
 # Script to download .torrent files from a collection of rss feeds.
 #   Copyright (C) 2010 Michael Delaney (based heavily on work by Jamie Bennet)
@@ -20,26 +20,25 @@
 # List of url feeds to be parsed. This entry is just an _example_. Please
 # do not download illegal torrents or torrents that you do not have permisson
 # to own.
-
-downloaddir = "/path/to/downloads"
+downloaddir = "/media/Shared_Media/Downloads/Downloaded via RSS"
 
 FEEDS = [
-           #Example:
-           # "http://www.url.com/rss.xml",
+	   #Example:
+	   # "http://www.url.com/rss.xml",
 
-        ]
-
-TIMESTAMP    = "~/rsstorrent.stamp"
+	]
+	
+TIMESTAMP    = "/root/rsstorrent.stamp"
 VERBOSE      = True
 
 import feedparser
 import pickle
 import os
 import urllib2
-from datetime import datetime
+from datetime import datetime 
 
 # First things first, let's see if Transmission has any completed torrents we can remove
-os.system("transmission-remote -l | grep 100% | grep 'Seeding\|Idle' | awk '{print $1}' | xargs -n 1 -I % tr$
+os.system("transmission-remote -l | grep 100% | grep 'Seeding\|Idle' | awk '{print $1}' | xargs -n 1 -I % transmission-remote -t % -r")
 # Back to your regularly scheduled RSS parsing script
 
 items = []
@@ -47,7 +46,7 @@ feed_bad = False
 current_file = " "
 
 # Build up a list of torrents to check
-for feed_url in FEEDS:
+for feed_url in FEEDS: 
     feed = feedparser.parse(feed_url)
 
     # Valid feed ?
@@ -55,9 +54,9 @@ for feed_url in FEEDS:
         for item in feed["items"]:
             items.append((item["date_parsed"], item))
     else:
-        if VERBOSE:
+        if VERBOSE:    
             print "bad feed: " + feed_url
-
+            
         feed_bad = True
 
 timestamp_file = " "
@@ -89,12 +88,12 @@ for item in items:
     id = item[0]
     item_date = datetime(id[0], id[1], id[2], id[3], id[4])
     if item_date > last_check_date:
-        torrentfile = item[1]["link"].encode('unicode_escape')
+	torrentfile = item[1]["link"].encode('unicode_escape')
         #if torrentfile[-7:] != "torrent":
         #  torrentfile += ".torrent"
-        command = 'transmission-remote -a %s > /dev/null' % (torrentfile) +' -w "'+downloaddir+'"'
+	command = 'transmission-remote -a %s > /dev/null' % (torrentfile) +' -w "'+downloaddir+'"'
         os.system(command)
-        downloaded_torrent = True
+	downloaded_torrent = True
 
 if downloaded_torrent == False:
     if VERBOSE:
